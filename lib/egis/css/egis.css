@@ -1,0 +1,1292 @@
+/* required styles */
+
+.egis-pane,
+.egis-tile,
+.egis-marker-icon,
+.egis-marker-shadow,
+.egis-tile-container,
+.egis-map-pane svg,
+.egis-map-pane canvas,
+.egis-zoom-box,
+.egis-image-layer,
+.egis-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.egis-container {
+    overflow: hidden;
+}
+.egis-tile,
+.egis-marker-icon,
+.egis-marker-shadow {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.egis-safari .egis-tile {
+    image-rendering: -webkit-optimize-contrast;
+}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.egis-safari .egis-tile-container {
+    width: 1600px;
+    height: 1600px;
+    -webkit-transform-origin: 0 0;
+}
+.egis-marker-icon,
+.egis-marker-shadow {
+    display: block;
+}
+/* .egis-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .egis-container img: map is broken in FF if you have max-width: 100% on tiles */
+.egis-container .egis-overlay-pane svg,
+.egis-container .egis-marker-pane img,
+.egis-container .egis-shadow-pane img,
+.egis-container .egis-tile-pane img,
+.egis-container img.egis-image-layer {
+    max-width: none !important;
+}
+
+.egis-container.egis-touch-zoom {
+    -ms-touch-action: pan-x pan-y;
+    touch-action: pan-x pan-y;
+}
+.egis-container.egis-touch-drag {
+    -ms-touch-action: pinch-zoom;
+}
+.egis-container.egis-touch-drag.egis-touch-drag {
+    -ms-touch-action: none;
+    touch-action: none;
+}
+.egis-tile {
+    filter: inherit;
+    visibility: hidden;
+    border: 0;
+}
+.egis-tile-loaded {
+    visibility: inherit;
+}
+.egis-zoom-box {
+    width: 0;
+    height: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    z-index: 800;
+}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.egis-overlay-pane svg {
+    -moz-user-select: none;
+}
+
+.egis-pane         { z-index: 400; }
+
+.egis-tile-pane    { z-index: 200; }
+.egis-overlay-pane { z-index: 400; }
+.egis-shadow-pane  { z-index: 500; }
+.egis-marker-pane  { z-index: 600; }
+.egis-tooltip-pane   { z-index: 650; }
+.egis-popup-pane   { z-index: 700; }
+
+.egis-map-pane canvas { z-index: 100; }
+.egis-map-pane svg    { z-index: 200; }
+
+.egis-vml-shape {
+    width: 1px;
+    height: 1px;
+}
+.lvml {
+    behavior: url(#default#VML);
+    display: inline-block;
+    position: absolute;
+}
+
+
+/* control positioning */
+
+.egis-control {
+    position: relative;
+    z-index: 800;
+    pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+    pointer-events: auto;
+}
+.egis-top,
+.egis-bottom {
+    position: absolute;
+    z-index: 1000;
+    pointer-events: none;
+}
+.egis-top {
+    top: 0;
+}
+.egis-right {
+    right: 0;
+}
+.egis-bottom {
+    bottom: 0;
+}
+.egis-left {
+    left: 0;
+}
+.egis-control {
+    float: left;
+    clear: both;
+}
+.egis-right .egis-control {
+    float: right;
+}
+.egis-top .egis-control {
+    margin-top: 10px;
+}
+.egis-bottom .egis-control {
+    margin-bottom: 10px;
+}
+.egis-left .egis-control {
+    margin-left: 10px;
+}
+.egis-right .egis-control {
+    margin-right: 10px;
+}
+
+
+/* zoom and fade animations */
+
+.egis-fade-anim .egis-tile {
+    will-change: opacity;
+}
+.egis-fade-anim .egis-popup {
+    opacity: 0;
+    -webkit-transition: opacity 0.2s linear;
+    -moz-transition: opacity 0.2s linear;
+    -o-transition: opacity 0.2s linear;
+    transition: opacity 0.2s linear;
+}
+.egis-fade-anim .egis-map-pane .egis-popup {
+    opacity: 1;
+}
+.egis-zoom-animated {
+    -webkit-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+.egis-zoom-anim .egis-zoom-animated {
+    will-change: transform;
+}
+.egis-zoom-anim .egis-zoom-animated {
+    -webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+    -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+    -o-transition:      -o-transform 0.25s cubic-bezier(0,0,0.25,1);
+    transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+}
+.egis-zoom-anim .egis-tile,
+.egis-pan-anim .egis-tile {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
+}
+
+.egis-zoom-anim .egis-zoom-hide {
+    visibility: hidden;
+}
+
+
+/* cursors */
+
+.egis-interactive {
+    cursor: pointer;
+}
+.egis-grab {
+    cursor: -webkit-grab;
+    cursor:    -moz-grab;
+}
+.egis-crosshair,
+.egis-crosshair .egis-interactive {
+    cursor: crosshair;
+}
+.egis-popup-pane,
+.egis-control {
+    cursor: auto;
+}
+.egis-dragging .egis-grab,
+.egis-dragging .egis-grab .egis-interactive,
+.egis-dragging .egis-marker-draggable {
+    cursor: move;
+    cursor: -webkit-grabbing;
+    cursor:    -moz-grabbing;
+}
+
+/* marker & overlays interactivity */
+.egis-marker-icon,
+.egis-marker-shadow,
+.egis-image-layer,
+.egis-pane > svg path,
+.egis-tile-container {
+    pointer-events: none;
+}
+
+.egis-marker-icon.egis-interactive,
+.egis-image-layer.egis-interactive,
+.egis-pane > svg path.egis-interactive {
+    pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+    pointer-events: auto;
+}
+
+/* visual tweaks */
+
+.egis-container {
+    background: #ddd;
+    outline: 0;
+}
+.egis-container a {
+    color: #0078A8;
+}
+.egis-container a.egis-active {
+    outline: 2px solid orange;
+}
+.egis-zoom-box {
+    border: 2px dotted #38f;
+    background: rgba(255,255,255,0.5);
+}
+
+
+/* general typography */
+.egis-container {
+    font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+
+/* general toolbar styles */
+
+.egis-bar {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 4px;
+}
+.egis-bar a,
+.egis-bar a:hover {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+}
+.egis-bar a,
+.egis-control-layers-toggle {
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: block;
+}
+.egis-bar a:hover {
+    background-color: #f4f4f4;
+}
+.egis-bar a:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+.egis-bar a:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom: none;
+}
+.egis-bar a.egis-disabled {
+    cursor: default;
+    background-color: #f4f4f4;
+    color: #bbb;
+}
+
+.egis-touch .egis-bar a {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+
+
+/* zoom control */
+
+.egis-control-zoom-in,
+.egis-control-zoom-out {
+    font: bold 18px 'Lucida Console', Monaco, monospace;
+    text-indent: 1px;
+}
+.egis-control-zoom-out {
+    font-size: 20px;
+}
+
+.egis-touch .egis-control-zoom-in {
+    font-size: 22px;
+}
+.egis-touch .egis-control-zoom-out {
+    font-size: 24px;
+}
+
+
+/* layers control */
+
+.egis-control-layers {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    background: #fff;
+    border-radius: 5px;
+}
+.egis-control-layers-toggle {
+    background-image: url(../images/layers.png);
+    width: 36px;
+    height: 36px;
+}
+.egis-retina .egis-control-layers-toggle {
+    background-image: url(../images/layers-2x.png);
+    background-size: 26px 26px;
+}
+.egis-touch .egis-control-layers-toggle {
+    width: 44px;
+    height: 44px;
+}
+.egis-control-layers .egis-control-layers-list,
+.egis-control-layers-expanded .egis-control-layers-toggle {
+    display: none;
+}
+.egis-control-layers-expanded .egis-control-layers-list {
+    display: block;
+    position: relative;
+}
+.egis-control-layers-expanded {
+    padding: 6px 10px 6px 6px;
+    color: #333;
+    background: #fff;
+}
+.egis-control-layers-scrollbar {
+    overflow-y: scroll;
+    padding-right: 5px;
+}
+.egis-control-layers-selector {
+    margin-top: 2px;
+    position: relative;
+    top: 1px;
+}
+.egis-control-layers label {
+    display: block;
+}
+.egis-control-layers-separator {
+    height: 0;
+    border-top: 1px solid #ddd;
+    margin: 5px -10px 5px -6px;
+}
+
+/* Default icon URLs */
+.egis-default-icon-path {
+    background-image: url(../images/marker-icon.png);
+}
+
+
+/* attribution and scale controls */
+
+.egis-container .egis-control-attribution {
+    background: #fff;
+    background: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+.egis-control-attribution,
+.egis-control-scale-line {
+    padding: 0 5px;
+    color: #333;
+}
+.egis-control-attribution a {
+    text-decoration: none;
+}
+.egis-control-attribution a:hover {
+    text-decoration: underline;
+}
+.egis-container .egis-control-attribution,
+.egis-container .egis-control-scale {
+    font-size: 11px;
+}
+.egis-left .egis-control-scale {
+    margin-left: 5px;
+}
+.egis-bottom .egis-control-scale {
+    margin-bottom: 5px;
+}
+.egis-control-scale-line {
+    border: 2px solid #777;
+    border-top: none;
+    line-height: 1.1;
+    padding: 2px 5px 1px;
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    background: #fff;
+    background: rgba(255, 255, 255, 0.5);
+}
+.egis-control-scale-line:not(:first-child) {
+    border-top: 2px solid #777;
+    border-bottom: none;
+    margin-top: -2px;
+}
+.egis-control-scale-line:not(:first-child):not(:last-child) {
+    border-bottom: 2px solid #777;
+}
+
+.egis-touch .egis-control-attribution,
+.egis-touch .egis-control-layers,
+.egis-touch .egis-bar {
+    box-shadow: none;
+}
+.egis-touch .egis-control-layers,
+.egis-touch .egis-bar {
+    border: 2px solid rgba(0,0,0,0.2);
+    background-clip: padding-box;
+}
+
+
+/* popup */
+
+.egis-popup {
+    position: absolute;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.egis-popup-content-wrapper {
+    padding: 1px;
+    text-align: left;
+    border-radius: 10px;
+    /*border-radius: 12px;*/
+}
+.egis-popup-content {
+
+    margin: 10px 10px;
+    /*margin: 13px 19px;*/
+    line-height: 1.4;
+}
+.egis-popup-content p {
+    margin: 18px 0;
+}
+.egis-popup-tip-container {
+    width: 40px;
+    height: 20px;
+    position: absolute;
+    left: 50%;
+    margin-left: -20px;
+    overflow: hidden;
+    pointer-events: none;
+}
+.egis-popup-tip {
+    width: 17px;
+    height: 17px;
+    padding: 1px;
+
+    margin: -10px auto 0;
+
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.egis-popup-content-wrapper,
+.egis-popup-tip {
+    background: white;
+    color: #333;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+}
+.egis-container a.egis-popup-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 4px 0 0;
+    border: none;
+    text-align: center;
+    width: 18px;
+    height: 14px;
+    font: 16px/14px Tahoma, Verdana, sans-serif;
+    color: #c3c3c3;
+    text-decoration: none;
+    font-weight: bold;
+    background: transparent;
+}
+.egis-container a.egis-popup-close-button:hover {
+    color: #999;
+}
+.egis-popup-scrolled {
+    overflow: auto;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+.egis-oldie .egis-popup-content-wrapper {
+    zoom: 1;
+}
+.egis-oldie .egis-popup-tip {
+    width: 24px;
+    margin: 0 auto;
+
+    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+    filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+}
+.egis-oldie .egis-popup-tip-container {
+    margin-top: -1px;
+}
+
+.egis-oldie .egis-control-zoom,
+.egis-oldie .egis-control-layers,
+.egis-oldie .egis-popup-content-wrapper,
+.egis-oldie .egis-popup-tip {
+    border: 1px solid #999;
+}
+
+
+/* div icon */
+
+.egis-div-icon {
+    background: #fff;
+    border: 1px solid #666;
+}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.egis-tooltip {
+    position: absolute;
+    padding: 6px;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    color: #222;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.egis-tooltip.egis-clickable {
+    cursor: pointer;
+    pointer-events: auto;
+}
+.egis-tooltip-top:before,
+.egis-tooltip-bottom:before,
+.egis-tooltip-left:before,
+.egis-tooltip-right:before {
+    position: absolute;
+    pointer-events: none;
+    border: 6px solid transparent;
+    background: transparent;
+    content: "";
+}
+
+/* Directions */
+
+.egis-tooltip-bottom {
+    margin-top: 6px;
+}
+.egis-tooltip-top {
+    margin-top: -6px;
+}
+.egis-tooltip-bottom:before,
+.egis-tooltip-top:before {
+    left: 50%;
+    margin-left: -6px;
+}
+.egis-tooltip-top:before {
+    bottom: 0;
+    margin-bottom: -12px;
+    border-top-color: #fff;
+}
+.egis-tooltip-bottom:before {
+    top: 0;
+    margin-top: -12px;
+    margin-left: -6px;
+    border-bottom-color: #fff;
+}
+.egis-tooltip-left {
+    margin-left: -6px;
+}
+.egis-tooltip-right {
+    margin-left: 6px;
+}
+.egis-tooltip-left:before,
+.egis-tooltip-right:before {
+    top: 50%;
+    margin-top: -6px;
+}
+.egis-tooltip-left:before {
+    right: 0;
+    margin-right: -12px;
+    border-left-color: #fff;
+}
+.egis-tooltip-right:before {
+    left: 0;
+    margin-left: -12px;
+    border-right-color: #fff;
+}
+
+
+
+
+/***************鹰眼样式******************/
+.egis-control-minimap {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 3px;
+    background: #f8f8f9;
+    transition: all .6s;
+    box-sizing: content-box;
+}
+
+.egis-control-minimap a {
+    background-color: rgba(255, 255, 255, 1.0);
+    background-repeat: no-repeat;
+    z-index: 99999;
+    transition: all .6s;
+}
+
+.egis-control-minimap a.minimized-bottomright {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    border-radius: 0px;
+}
+
+.egis-control-minimap a.minimized-topleft {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    border-radius: 0px;
+}
+
+.egis-control-minimap a.minimized-bottomleft {
+    -webkit-transform: rotate(270deg);
+    transform: rotate(270deg);
+    border-radius: 0px;
+}
+
+.egis-control-minimap a.minimized-topright {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    border-radius: 0px;
+}
+
+.egis-control-minimap-toggle-display{
+    background-image: url("../images/miniMap/toggle.svg");
+    background-size: cover;
+    position: absolute;
+    border-radius: 3px 0px 0px 0px;
+}
+
+.egis-oldie .egis-control-minimap-toggle-display{
+    background-image: url("../images/miniMap/toggle.png");
+}
+
+.egis-control-minimap-toggle-display-bottomright {
+    bottom: 0;
+    right: 0;
+}
+
+.egis-control-minimap-toggle-display-topleft{
+    top: 0;
+    left: 0;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.egis-control-minimap-toggle-display-bottomleft{
+    bottom: 0;
+    left: 0;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.egis-control-minimap-toggle-display-topright{
+    top: 0;
+    right: 0;
+    -webkit-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+
+/* Old IE */
+.egis-oldie .egis-control-minimap {
+    border: 1px solid #999;
+}
+
+.egis-oldie .egis-control-minimap a {
+    background-color: #fff;
+}
+
+.egis-oldie .egis-control-minimap a.minimized {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
+
+
+.egis-control-MousePosition{
+
+    padding: 0 5px;
+    font-size: 18px;
+    color: #fff;
+}
+
+/*---------------------slider---------------------------*/
+
+.egis-control-zoomslider-wrap {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    cursor: default;
+}
+.egis-control-zoomslider-body {
+    position: relative;
+    width: 2px;
+    border: solid #fff;
+    border-width: 0 9px 0 9px;
+    background-color: black;
+    margin: 0 auto;
+    cursor: default!important;
+}
+.egis-control-zoomslider-knob {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 8px 4px;
+    width: 12px;
+    height: 4px;
+    margin: -9px 0 0 -10px;
+}
+.egis-control-zoomslider-knob > span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #efefef;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid #000;
+    -webkit-box-shadow: inset 1px 1px 1px rgba(240,240,240,0.3),inset -1px -1px 1px rgba(0,0,0,0.1), 0 1px 1px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 1px 1px 1px rgba(240,240,240,0.3),inset -1px -1px 1px rgba(0,0,0,0.1), 0 1px 1px rgba(0,0,0,0.2);
+    box-shadow: inset 1px 1px 1px rgba(240,240,240,0.3),inset -1px -1px 1px rgba(0,0,0,0.1), 0 1px 1px rgba(0,0,0,0.2);
+}
+
+
+.egis-control-zoomslider-scaleMark {
+    position: relative;
+    width: 10px;
+    height: 1px;
+    background-color: #3f0000;
+    margin-left: 8px;
+
+}
+
+
+
+
+
+
+
+.egis-control-zoomslider-body:hover {
+    cursor: pointer;
+}
+.egis-control-zoomslider-knob:hover {
+    cursor: default;
+    cursor: -webkit-grab;
+    cursor:    -moz-grab;
+}
+
+.egis-dragging .egis-control-zoomslider,
+.egis-dragging .egis-control-zoomslider-wrap,
+.egis-dragging .egis-control-zoomslider-body,
+.egis-dragging .egis-control-zoomslider a,
+.egis-dragging .egis-control-zoomslider a.egis-control-zoomslider-disabled,
+.egis-dragging .egis-control-zoomslider-knob:hover  {
+    cursor: move;
+    cursor: -webkit-grabbing;
+    cursor:    -moz-grabbing;
+}
+.egis-dragging .egis-control-zoomslider-knob:active  {
+    cursor: move;
+    cursor: -webkit-grabbing;
+    cursor:    -moz-grabbing;
+}
+
+/** Leaflet Zoom Styles **/
+.egis-container .egis-control-zoomslider {
+    /*margin-left: -13px;*/
+    /*margin-top: 10px;*/
+}
+.egis-control-zoomslider a {
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    display: block;
+}
+.egis-control-zoomslider a:hover {
+    background-color: #f4f4f4;
+}
+.egis-control-zoomslider-in {
+    font: bold 18px 'Lucida Console', Monaco, monospace;
+}
+.egis-control-zoomslider-in:after{
+    content:"+"
+}
+.egis-control-zoomslider-out {
+    font: bold 22px 'Lucida Console', Monaco, monospace;
+}
+.egis-control-zoomslider-out:after{
+    content:"−"
+}
+.egis-control-zoomslider a.egis-control-zoomslider-disabled {
+    cursor: default;
+    color: #bbb;
+}
+
+/* Touch */
+/*.egis-touch .egis-control-zoomslider-body {*/
+    /*background-position: 10px 0;*/
+/*}*/
+/*.egis-touch .egis-control-zoomslider-knob {*/
+    /*width: 16px;*/
+    /*!*margin-left: -7px;*!*/
+/*}*/
+/*.egis-touch .egis-control-zoomslider a {*/
+    /*width: 30px;*/
+    /*line-height: 30px;*/
+/*}*/
+/*.egis-touch .egis-control-zoomslider a:hover {*/
+    /*width: 30px;*/
+    /*line-height: 30px;*/
+/*}*/
+/*.egis-touch .egis-control-zoomslider-in {*/
+    /*font-size: 24px;*/
+    /*line-height: 29px;*/
+/*}*/
+/*.egis-touch .egis-control-zoomslider-out {*/
+    /*font-size: 28px;*/
+    /*line-height: 30px;*/
+/*}*/
+/*.egis-touch .egis-control-zoomslider {*/
+    /*box-shadow: none;*/
+    /*border: 4px solid rgba(0,0,0,0.3);*/
+/*}*/
+
+
+/*--------------------------panControl---------------------------------------*/
+
+
+.has-egis-pan-control .egis-control-zoom {
+    position: relative;
+    left:22px;
+}
+/*
+   Make the zoomSlider control
+   (https://github.com/mattiasbengtsson/Leaflet.zoomslider)
+   align with the pan control.
+*/
+.has-egis-pan-control .egis-control-zoomslider {
+    position: relative;
+    left:22px;
+}
+
+.egis-control-pan  {
+    /*
+      .egis-control-pan-right-wrap: right
+    + .egis-control-pan a: width
+    = 52 + 24 = 76
+    */
+    width: 76px;
+    /*
+      .egis-control-pan-down-wrap: top
+    + .egis-control-pan a: height
+    = 52 + 24 = 76
+    */
+    height: 76px;
+}
+
+.egis-control-pan > div {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 10px;
+}
+.egis-control-pan > div {
+    box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+}
+.egis-control-pan a {
+    background-color: #fff;
+}
+.egis-control-pan a{
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: block;
+}
+.egis-control-pan a {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    width: 23px;
+    height: 23px;
+}
+.egis-control-pan a:hover {
+    background-color: #f4f4f4;
+}
+
+.egis-control-pan-up-wrap {
+    position:absolute;
+    left:26px;
+}
+.egis-control-pan-left-wrap {
+    position:absolute;
+    top:26px;
+}
+.egis-control-pan-right-wrap {
+    position:absolute;
+    left:52px;
+    top:26px;
+}
+.egis-control-pan-down-wrap {
+    position:absolute;
+    left:26px;
+    top:52px;
+}
+
+.egis-control-pan-up:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left:50%;
+    top: 50%;
+    border-width: 7px 5px 8px 5px;
+    border-style: solid;
+    border-color: transparent transparent #000 transparent;
+    margin: -12px 0 0 -5px;
+    /*background-image: url(../images/panControl/pan-up.png);*/
+}
+.egis-control-pan-left:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left:50%;
+    top: 50%;
+    border-width: 5px 8px 5px 7px;
+    border-style: solid;
+    border-color: transparent #000 transparent transparent;
+    margin: -6px 0 0 -12px;
+    /*background-image: url(../images/panControl/pan-left.png);*/
+}
+.egis-control-pan-right:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left:50%;
+    top: 50%;
+    border-width: 5px 7px 5px 8px;
+    border-style: solid;
+    border-color: transparent transparent transparent #000;
+    margin: -6px 0 0 -3px;
+    /*background-image: url(../images/panControl/pan-right.png);*/
+}
+.egis-control-pan-down:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left:50%;
+    top: 50%;
+    border-width: 8px 5px 7px 5px;
+    border-style: solid;
+    border-color: #000 transparent transparent transparent;
+    margin: -3px 0 0 -5px;
+    /*background-image: url(../images/panControl/pan-down.png);*/
+}
+
+/****** Touch Alterations ******/
+/*.egis-touch .egis-control-pan div {*/
+    /*border: 4px solid rgba(0, 0, 0, 0.3);*/
+    /*box-shadow: none;*/
+
+    /*border-radius: 10px;*/
+/*}*/
+
+/*.egis-touch .egis-control-pan {*/
+    /*width: 89px;*/
+    /*height: 119px;*/
+/*}*/
+
+/*.egis-touch .egis-control-pan a {*/
+    /*width: 30px;*/
+    /*height: 30px;*/
+
+    /*border-radius: 7px;*/
+/*}*/
+
+/*.egis-touch .egis-control-pan-up-wrap {*/
+    /*left:26px;*/
+/*}*/
+
+/*.egis-touch .egis-control-pan-left-wrap {*/
+    /*top:40px;*/
+/*}*/
+
+/*.egis-touch .egis-control-pan-right-wrap {*/
+    /*left:52px;*/
+    /*top:40px;*/
+/*}*/
+
+/*.egis-touch .egis-control-pan-down-wrap {*/
+    /*left:26px;*/
+    /*top:80px;*/
+/*}*/
+
+
+/*-----------------------panControl for ie-------------------------*/
+
+
+.egis-control-pan > div {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#3F000000',EndColorStr='#3F000000');
+    border: 4px solid #fff;
+}
+.egis-control-pan a {
+    background-color: #fff;
+    width: 17px;
+    height: 17px;
+}
+.egis-control-pan a:hover {
+    background-color: #f4f4f4;
+}
+
+.egis-control-pan-up-wrap {
+    position:absolute;
+    left:27px;
+}
+.egis-control-pan-left-wrap {
+    position:absolute;
+    top:27px;
+}
+.egis-control-pan-right-wrap {
+    position:absolute;
+    left:54px;
+    top:27px;
+}
+.egis-control-pan-down-wrap {
+    position:absolute;
+    left:27px;
+    top:54px;
+}
+
+/*.egis-control-zoom {
+	left:23px;
+}*/
+.egis-control-zoomslider {
+    position: relative;
+    /*left:23px;*/
+}
+
+
+
+.egis-layer-invisible{
+    display:none;
+}
+
+.egis-layer-visible{
+    display:block;
+}
+
+
+.egis-bar-part-share{
+    background-image: url(../images/ShareLocation/IconLocShare.png);
+    width:25px;
+    height: 25px;
+}
+
+.egis-bar-recyle{
+    background-image: url(../images/ShareLocation/IconLocShareRecyle.png);
+    width:25px;
+    height: 25px;
+}
+
+.pointButtons {
+    background-image: url(../images/point1.png);
+    background-size: 16px,16px;
+}
+.rectangularButtons {
+    background-image: url(../images/rectangular4.png);
+    background-size: 18px,18px;
+}
+.polygonButtons {
+    background-image: url(../images/polygon1.png);
+    background-size: 16px,16px;
+}
+.circleButtons {
+    background-image: url(../images/circle.png);
+    background-size: 15px,15px;
+}
+.edits{
+    background-image: url(../images/edit2.png);
+    background-size: 16px,16px;
+}
+.stops{
+    background-image: url(../images/stop.png);
+    background-size: 16px,16px;
+}
+.polylineButtons {
+    background-image: url(../images/polyline1.png);
+    background-size: 16px,16px;
+}
+.deleteButtons {
+    background-image: url(../images/delete2.png);
+    background-size: 16px,16px;
+}
+.selectButtons {
+    background-image: url(../images/select2.png);
+    background-size: 16px,16px;
+}
+
+
+
+.egis-control-legend{
+    background-color: #fff;
+    min-width: 150px;
+    padding: 10px;
+    overflow-y: auto;
+
+    box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+    border-radius: 3px;
+}
+
+.egis-control-legend-title{
+    font-size: 14px;
+    margin: 10px 0;
+    font-weight: 700;
+}
+.egis-control-legend-subtitle{
+    margin: 15px 0 5px 0;
+}
+
+.egis-control-legend-item{
+    position: relative;
+}
+.egis-control-legend-icon_wrap{
+    height: 40px;
+    background: url(../images/transparent-bg.png) repeat;
+}
+.egis-control-legend-icon{
+    vertical-align: middle;
+}
+
+.egis-control-legend-label{
+    vertical-align: middle;
+    padding-left: 14px;
+}
+.zoomIn{
+    background-image: url(../images/zoomIn2.png);
+    background-size: 16px,16px;
+}
+.zoomInClick{
+    cursor:zoom-in ;
+}
+.zoomOutClick{
+    cursor:zoom-out ;
+}
+.zoomOut{
+    background-image: url(../images/zoomOut2.png);
+    background-size: 16px,16px;
+}
+.stops{
+    background-image: url(../images/stop.png);
+    background-size: 16px,16px;
+}
+.frontButtons {
+    background-image: url(../images/back3.png);
+    background-size: 16px,16px;
+}
+.backButtons {
+    background-image: url(../images/front3.png);
+    background-size: 16px,16px;
+}
+.homeButtons {
+    background-image: url(../images/home.png);
+    background-size: 20px,20px;
+}
+.distanceButtons {
+    background-image: url(../images/distanceMeasure.png);
+    background-size: 19px,19px;
+}
+
+/*聚类插件的css，fixme 之后也走打包流程，把这些东西分开*/
+.egis-cluster-anim .egis-marker-icon, .egis-cluster-anim .egis-marker-shadow {
+    -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+    -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+    -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+.egis-cluster-spider-leg {
+    /* stroke-dashoffset (duration and function) should match with egis-marker-icon transform in order to track it exactly */
+    -webkit-transition: -webkit-stroke-dashoffset 0.3s ease-out, -webkit-stroke-opacity 0.3s ease-in;
+    -moz-transition: -moz-stroke-dashoffset 0.3s ease-out, -moz-stroke-opacity 0.3s ease-in;
+    -o-transition: -o-stroke-dashoffset 0.3s ease-out, -o-stroke-opacity 0.3s ease-in;
+    transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
+}
+
+.marker-cluster-small {
+    background-color: rgba(181, 226, 140, 0.6);
+}
+.marker-cluster-small div {
+    background-color: rgba(110, 204, 57, 0.6);
+}
+
+.marker-cluster-medium {
+    background-color: rgba(241, 211, 87, 0.6);
+}
+.marker-cluster-medium div {
+    background-color: rgba(240, 194, 12, 0.6);
+}
+
+.marker-cluster-large {
+    background-color: rgba(253, 156, 115, 0.6);
+}
+.marker-cluster-large div {
+    background-color: rgba(241, 128, 23, 0.6);
+}
+
+/* IE 6-8 fallback colors */
+.egis-oldie .marker-cluster-small {
+    background-color: rgb(181, 226, 140);
+}
+.egis-oldie .marker-cluster-small div {
+    background-color: rgb(110, 204, 57);
+}
+
+.egis-oldie .marker-cluster-medium {
+    background-color: rgb(241, 211, 87);
+}
+.egis-oldie .marker-cluster-medium div {
+    background-color: rgb(240, 194, 12);
+}
+
+.egis-oldie .marker-cluster-large {
+    background-color: rgb(253, 156, 115);
+}
+.egis-oldie .marker-cluster-large div {
+    background-color: rgb(241, 128, 23);
+}
+
+.marker-cluster {
+    background-clip: padding-box;
+    border-radius: 20px;
+}
+.marker-cluster div {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+    margin-top: 5px;
+
+    text-align: center;
+    border-radius: 15px;
+    font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+.marker-cluster span {
+    line-height: 30px;
+}
+
+/*聚类插件的css，fixme 之后也走打包流程，把这些东西分开---end*/
